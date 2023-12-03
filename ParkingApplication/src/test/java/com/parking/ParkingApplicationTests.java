@@ -1,10 +1,10 @@
-package com.todo.project;
+package com.parking;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TodoProjectApplicationTests {
+class ParkingApplicationTests {
 
 	@Test
 	void contextLoads() {
