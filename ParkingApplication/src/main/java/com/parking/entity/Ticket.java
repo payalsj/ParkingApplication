@@ -9,9 +9,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "TICKET")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Ticket {
 	
 	@Id
@@ -27,38 +35,7 @@ public class Ticket {
 	private ParkingSpot parkingSpot;
 	
 	
-	public Ticket(int ticketId, int ticketNumber, ParkingSpot parkingSpot) {
-		super();
-		this.ticketId = ticketId;
-		this.ticketNumber = ticketNumber;
-		this.parkingSpot = parkingSpot;
-	}
-	public Ticket() {
-		super();
-	}
-	public int getTicketId() {
-		return ticketId;
-	}
-	public void setTicketId(int ticketId) {
-		this.ticketId = ticketId;
-	}
-	public int getTicketNumber() {
-		return ticketNumber;
-	}
-	public void setTicketNumber(int ticketNumber) {
-		this.ticketNumber = ticketNumber;
-	}
-	public ParkingSpot getParkingSpot() {
-		return parkingSpot;
-	}
-	public void setParkingSpot(ParkingSpot parkingSpot) {
-		this.parkingSpot = parkingSpot;
-	}
 	
-	@Override
-	public String toString() {
-		return "Ticket [ticketId=" + ticketId + ", ticketNumber=" + ticketNumber + ", parkingSpot=" + parkingSpot + "]";
-	}
 	
 
 }

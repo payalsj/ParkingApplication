@@ -12,6 +12,6 @@ import com.parking.entity.ParkingSpot;
 public interface ParkingSpotRepository extends JpaRepository<ParkingSpot, Integer> {
 	
 	@Query(nativeQuery = true, value =" select * from parking_spot where CAR_ID is null order by SPOT_NUMBER limit 1;")
-	public ParkingSpot emptyParking();
+	public ParkingSpot getNearestAvailableSpotForParking();
 
 }

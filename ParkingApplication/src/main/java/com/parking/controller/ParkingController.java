@@ -6,30 +6,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.parking.entity.Car;
+import com.parking.dto.CarDto;
 import com.parking.entity.Ticket;
-import com.parking.service.ParkCarService;
-import com.parking.service.ParkingSpotService;
+import com.parking.service.ParkingSpotServiceImpl;
 
 @RestController
 public class ParkingController {
 
 	@Autowired
-	private ParkCarService parkCarService;
-	
-	@Autowired
-	private ParkingSpotService parkingSpotServic;
+	private ParkingSpotServiceImpl parkingSpotServic;
 
 	@PostMapping("/park/car")
-	public void carDetails(@RequestBody Car car) {
-		parkCarService.carDetails(car);
+	public Ticket getTicket(@RequestBody CarDto car) {
+		return parkingSpotServic.getTicket(car);
 
 	}
-	
+
 	@GetMapping("/ticket")
 	public Ticket getTicket() {
 		return parkingSpotServic.generateTicket();
-		
+
 	}
 
 }
