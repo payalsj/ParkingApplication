@@ -1,24 +1,20 @@
 package com.parking.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.parking.dto.CarDto;
-import com.parking.entity.AuditCars;
 import com.parking.entity.Car;
+import com.parking.entity.CarsAudit;
 import com.parking.entity.ParkingSpot;
 import com.parking.entity.Ticket;
 import com.parking.exception.CarAlreadyEnteredException;
 import com.parking.exception.CarNotFound;
 import com.parking.exception.ParkingNotAvailableException;
-import com.parking.repository.AuditRepository;
 import com.parking.repository.CarRepository;
+import com.parking.repository.CarsAuditRepository;
 import com.parking.repository.ParkingSpotRepository;
 import com.parking.repository.TicketRepository;
 
@@ -37,43 +33,33 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 	private TicketRepository ticketRepository;
 
 	@Autowired
-	private AuditRepository auditRepository;
+	private CarsAuditRepository auditRepository;
 
-	public Ticket generateTicket() {
-		return null;
-	}
-
-	public ResponseEntity<Ticket> getTicket(CarDto car) {
-
+	@Transactional
+	public Ticket getTicket(CarDto carDto) {
 		ParkingSpot parkingSpot = parkingSpotRepository.getNearestAvailableSpotForParking();
 		if (parkingSpot == null) {
 			throw new ParkingNotAvailableException("Sorry , Parking is full");
 		}
-
-		AuditCars audit = AuditCars.builder().registrationNumber(car.getRegistrationNumber()).entryTime(new Date())
-				.build();
-		auditRepository.save(audit);
-
-		Car car2 = Car.builder().registrationNumber(car.getRegistrationNumber()).color(car.getColor()).build();
-		Car car3 = carRepository.findByRegistrationNumber(car.getRegistrationNumber());
-		if (car3 != null) {
-			throw new CarAlreadyEnteredException("Car is already registered");
+		if (carRepository.findByRegistrationNumber(carDto.getRegistrationNumber()) != null) {
+			throw new CarAlreadyEnteredException("Car is already present in parking spot.");
 		}
-		carRepository.save(car2);
-
-		parkingSpot.setCar(car2);
+		Car car = carRepository.save(
+				Car.builder().registrationNumber(carDto.getRegistrationNumber()).color(carDto.getColor()).build());
+		parkingSpot.setCar(car);
 		parkingSpotRepository.save(parkingSpot);
-
 		Ticket ticket = Ticket.builder().parkingSpot(parkingSpot)
-				.ticketNumber((int) (Math.random() * (200 - 100 + 1)) + 100).build();
-
+				.ticketNumber((int) (Math.random() * (100000 - 50000 + 1)) + 50000).build();
 		ticketRepository.save(ticket);
-		return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
-
+		CarsAudit audit = CarsAudit.builder().registrationNumber(car.getRegistrationNumber()).entryTime(new Date())
+				.color(car.getColor()).registrationNumber(car.getRegistrationNumber())
+				.ticketNumber(ticket.getTicketNumber()).spotNumber(parkingSpot.getSpotNumber()).build();
+		auditRepository.save(audit);
+		return ticket;
 	}
 
 	@Transactional
-	public ResponseEntity<Void> deleteByRegistrationNumber(String registrationNumber) {
+	public void deleteByRegistrationNumber(String registrationNumber) {
 		Car car = carRepository.findByRegistrationNumber(registrationNumber);
 		if (car == null) {
 			throw new CarNotFound("Car Not Found");
@@ -82,14 +68,13 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 			parkingSpot.setCar(null);
 			parkingSpotRepository.save(parkingSpot);
 			Ticket ticket = ticketRepository.findByParkingSpot(parkingSpot);
-			ticket.setParkingSpot(null);
 			carRepository.delete(car);
-			
-			AuditCars audit=auditRepository.findByRegistrationNumber(car.getRegistrationNumber());
+			ticketRepository.delete(ticket);
+			CarsAudit audit = auditRepository.findByRegistrationNumber(car.getRegistrationNumber());
 			audit.setExitTime(new Date());
-
+			auditRepository.save(audit);
 		}
-		return ResponseEntity.status(HttpStatus.OK).build();
+
 	}
 
 }

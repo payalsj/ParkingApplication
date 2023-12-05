@@ -2,15 +2,14 @@ package com.parking.exception;
 
 public class ParkingNotAvailableException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	public ParkingNotAvailableException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ParkingNotAvailableException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
-	
 }

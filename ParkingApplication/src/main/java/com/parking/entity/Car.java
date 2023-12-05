@@ -29,7 +29,5 @@ public class Car {
 
 	@Column(name = "CAR_REGISTRAION_NUMBER")
 	private String registrationNumber;
-	
 
-	
 }

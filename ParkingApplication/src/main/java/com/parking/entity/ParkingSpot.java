@@ -1,6 +1,5 @@
 package com.parking.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,5 +33,4 @@ public class ParkingSpot {
 	@JoinColumn(name = "CAR_ID")
 	private Car car;
 
-	
 }

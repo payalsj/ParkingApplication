@@ -1,6 +1,5 @@
 package com.parking.entity;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -15,19 +14,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "AUDIT_CARS")
+@Table(name = "CARS_AUDIT")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class AuditCars {
+	public class CarsAudit {
 
 	@Column(name = "AUDIT_ID")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
 	private int id;
 	
+	@Column(name = "REGISTRATION_NUMBER")
 	private String registrationNumber;
+	
+	@Column(name = "SPOT_NUMBER")
+	private int spotNumber;
+	
+	@Column(name = "CAR_COLOR")
+	private String color;
+	
+	@Column(name = "TICKET_NUMBER")
+	private int ticketNumber;
+	
 
 	@Column(name = "CAR_ENTER")
 	private Date entryTime;

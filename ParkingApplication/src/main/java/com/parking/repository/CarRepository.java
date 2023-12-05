@@ -14,8 +14,8 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
 	void deleteByRegistrationNumber(String registrationNumber);
 
 	Car findByRegistrationNumber(String registrationNumber);
-	
-	@Query(nativeQuery = true,value = "select car_registraion_number  from car where car_color= :color")
+
+	@Query(value = "SELECT c.registrationNumber FROM Car c WHERE c.color= :color")
 	List<String> getAllRegistrationNumbersOfCarByColor(String color);
 
 	List<Car> findAllByColor(String color);

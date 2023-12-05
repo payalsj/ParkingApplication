@@ -1,11 +1,11 @@
 package com.parking.service;
 
-import org.springframework.http.ResponseEntity;
+import java.util.List;
 
 public interface TicketService {
 
-	ResponseEntity<?> getTicketNumberByRegistrationNumber(String registratonNumber);
+	Integer getTicketNumberByRegistrationNumber(String registratonNumber);
 
-	ResponseEntity<?> getTicketNumbersByCarColor(String color);
+	List<Integer> getTicketNumbersByCarColor(String color);
 
 }
