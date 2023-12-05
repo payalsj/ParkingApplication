@@ -1,5 +1,6 @@
 package com.parking.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.parking.dto.CarDto;
+import com.parking.entity.AuditCars;
 import com.parking.entity.Car;
 import com.parking.entity.ParkingSpot;
 import com.parking.entity.Ticket;
+import com.parking.exception.CarAlreadyEnteredException;
+import com.parking.exception.CarNotFound;
 import com.parking.exception.ParkingNotAvailableException;
+import com.parking.repository.AuditRepository;
 import com.parking.repository.CarRepository;
 import com.parking.repository.ParkingSpotRepository;
 import com.parking.repository.TicketRepository;
@@ -31,6 +36,9 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 	@Autowired
 	private TicketRepository ticketRepository;
 
+	@Autowired
+	private AuditRepository auditRepository;
+
 	public Ticket generateTicket() {
 		return null;
 	}
@@ -42,7 +50,15 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 			throw new ParkingNotAvailableException("Sorry , Parking is full");
 		}
 
+		AuditCars audit = AuditCars.builder().registrationNumber(car.getRegistrationNumber()).entryTime(new Date())
+				.build();
+		auditRepository.save(audit);
+
 		Car car2 = Car.builder().registrationNumber(car.getRegistrationNumber()).color(car.getColor()).build();
+		Car car3 = carRepository.findByRegistrationNumber(car.getRegistrationNumber());
+		if (car3 != null) {
+			throw new CarAlreadyEnteredException("Car is already registered");
+		}
 		carRepository.save(car2);
 
 		parkingSpot.setCar(car2);
@@ -60,18 +76,20 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 	public ResponseEntity<Void> deleteByRegistrationNumber(String registrationNumber) {
 		Car car = carRepository.findByRegistrationNumber(registrationNumber);
 		if (car == null) {
-			throw null;
+			throw new CarNotFound("Car Not Found");
 		} else {
 			ParkingSpot parkingSpot = parkingSpotRepository.findByCarId(car.getId());
 			parkingSpot.setCar(null);
 			parkingSpotRepository.save(parkingSpot);
-			Ticket ticket=ticketRepository.findByParkingSpot(parkingSpot);
+			Ticket ticket = ticketRepository.findByParkingSpot(parkingSpot);
 			ticket.setParkingSpot(null);
 			carRepository.delete(car);
+			
+			AuditCars audit=auditRepository.findByRegistrationNumber(car.getRegistrationNumber());
+			audit.setExitTime(new Date());
 
 		}
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	
 }

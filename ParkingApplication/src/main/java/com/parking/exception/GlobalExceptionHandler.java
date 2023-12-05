@@ -7,17 +7,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-	
 
-		@ExceptionHandler(ParkingNotAvailableException.class)
-		public ResponseEntity<?> parkingNotAvailable(ParkingNotAvailableException exceptio) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
-		}
+	@ExceptionHandler(ParkingNotAvailableException.class)
+	public ResponseEntity<?> parkingNotAvailable(ParkingNotAvailableException exceptio) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
+	}
 
-		
-		@ExceptionHandler(CarNotFound.class)
-		public ResponseEntity<?> carNotFound(CarNotFound exceptio) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
-		}
+	@ExceptionHandler(CarNotFound.class)
+	public ResponseEntity<?> carNotFound(CarNotFound exceptio) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
+	}
+
+	@ExceptionHandler(CarAlreadyEnteredException.class)
+	public ResponseEntity<?> carAlreadyEntered(CarAlreadyEnteredException exceptio) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
+	}
 
 }
