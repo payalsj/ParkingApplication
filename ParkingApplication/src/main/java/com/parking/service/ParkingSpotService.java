@@ -1,5 +1,6 @@
 package com.parking.service;
 
+
 import org.springframework.http.ResponseEntity;
 
 import com.parking.dto.CarDto;
@@ -10,7 +11,7 @@ public interface ParkingSpotService {
 	public Ticket generateTicket();
 	
 	public ResponseEntity<Ticket> getTicket(CarDto car);
-	public void deleteByRegistrationNumber(String registrationNumber);
-
+	public ResponseEntity<Void> deleteByRegistrationNumber(String registrationNumber);
+	
 
 }

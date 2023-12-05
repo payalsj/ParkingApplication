@@ -9,8 +9,6 @@ import com.parking.entity.Ticket;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
 
-//	Ticket findByParkingSpot(int spotId);
-	
 	Ticket findByParkingSpot(ParkingSpot spotId);
 
 }

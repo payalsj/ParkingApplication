@@ -1,5 +1,7 @@
 package com.parking.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -55,7 +57,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 	}
 
 	@Transactional
-	public void deleteByRegistrationNumber(String registrationNumber) {
+	public ResponseEntity<Void> deleteByRegistrationNumber(String registrationNumber) {
 		Car car = carRepository.findByRegistrationNumber(registrationNumber);
 		if (car == null) {
 			throw null;
@@ -68,5 +70,8 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 			carRepository.delete(car);
 
 		}
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
+
+	
 }
