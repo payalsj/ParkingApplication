@@ -25,7 +25,7 @@ To get list of Ticket Numbers for particualr car color:
 -Description:This Api will return List of Ticket numbers of all tickets where a car of a particular color is placed.
 -HTTP Method: GET
 
-To get registartion numbers of cara by Color:
+To get registartion numbers of cars by Color:
 -EndPoint= "http://localhost:8080/cars/{color}"
 -Description:This Api returns registration numbers of all cars of a particular Color.
 -HTTP Method: GET
