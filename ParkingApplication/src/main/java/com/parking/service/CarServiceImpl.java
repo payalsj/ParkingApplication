@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.parking.exception.NoRegistartionNumberFoundWithColor;
+import com.parking.exception.CarNotFound;
 import com.parking.repository.CarRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
 		List<String> listOfRegistartionNumbers=carRepository.getAllRegistrationNumbersOfCarByColor(color);
 		if(listOfRegistartionNumbers.isEmpty()) {
-			throw new NoRegistartionNumberFoundWithColor("There is no car in Parking With color: "+color);
+			throw new CarNotFound("There is no car in Parking With color: "+color);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(listOfRegistartionNumbers);
 	}

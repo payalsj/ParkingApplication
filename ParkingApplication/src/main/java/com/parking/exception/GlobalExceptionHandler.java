@@ -15,8 +15,8 @@ public class GlobalExceptionHandler {
 		}
 
 		
-		@ExceptionHandler(NoRegistartionNumberFoundWithColor.class)
-		public ResponseEntity<?> carNotFound(NoRegistartionNumberFoundWithColor exceptio) {
+		@ExceptionHandler(CarNotFound.class)
+		public ResponseEntity<?> carNotFound(CarNotFound exceptio) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptio.getMessage());
 		}
 
