@@ -1,6 +1,7 @@
 package com.parking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,7 @@ public class TicketController {
 	private ParkingSpotServiceImpl parkingSpotServic;
 
 	@PostMapping("/tickets")
-	public Ticket getTicket(@RequestBody CarDto car) {
+	public ResponseEntity<Ticket> getTicket(@RequestBody CarDto car) {
 		return parkingSpotServic.getTicket(car);
 
 	}

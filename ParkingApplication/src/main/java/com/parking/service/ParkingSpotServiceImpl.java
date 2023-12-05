@@ -1,6 +1,9 @@
 package com.parking.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.parking.dto.CarDto;
@@ -30,7 +33,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 		return null;
 	}
 
-	public Ticket getTicket(CarDto car) {
+	public ResponseEntity<Ticket> getTicket(CarDto car) {
 
 		ParkingSpot parkingSpot = parkingSpotRepository.getNearestAvailableSpotForParking();
 		if (parkingSpot == null) {
@@ -47,7 +50,7 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 				.ticketNumber((int) (Math.random() * (200 - 100 + 1)) + 100).build();
 
 		ticketRepository.save(ticket);
-		return ticket;
+		return ResponseEntity.status(HttpStatus.CREATED).body(ticket);
 
 	}
 
