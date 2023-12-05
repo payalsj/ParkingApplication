@@ -1,5 +1,8 @@
 package com.parking.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +32,35 @@ public class TicketServiceImpl implements TicketService {
 	public ResponseEntity<?> getTicketNumberByRegistrationNumber(String registratonNumber) {
 
 		Car car = carRepository.findByRegistrationNumber(registratonNumber);
-		if(car== null) {
-			throw new CarNotFound("No Car Found with Registartion Number : "+ registratonNumber);
+		if (car == null) {
+			throw new CarNotFound("No Car Found with Registartion Number : " + registratonNumber);
 		}
 
 		ParkingSpot parkingSpot = parkingSpotRepository.findByCarId(car.getId());
 
 		Ticket ticket = ticketRepository.findByParkingSpot(parkingSpot);
 
-		return ResponseEntity.status(HttpStatus.OK).body("For car with Registration Number "+ registratonNumber+ " Ticket Number Is : "+ticket.getTicketNumber());
+		return ResponseEntity.status(HttpStatus.OK).body("For car with Registration Number " + registratonNumber
+				+ " Ticket Number Is : " + ticket.getTicketNumber());
+	}
+
+	@Override
+	public ResponseEntity<?> getTicketNumbersByCarColor(String color) {
+
+		List<Car> car = carRepository.findAllByColor(color);
+		List<Integer> tickets = new ArrayList<>();
+
+		if (car == null) {
+			throw new CarNotFound("No Car Found with Color : " + color);
+		}
+		for (Car car2 : car) {
+			ParkingSpot parkingSpot = parkingSpotRepository.findByCarId(car2.getId());
+			Ticket ticket = ticketRepository.findByParkingSpot(parkingSpot);
+			tickets.add(ticket.getTicketNumber());
+
+		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(tickets);
 	}
 
 }

@@ -18,4 +18,6 @@ public interface CarRepository extends JpaRepository<Car, Integer> {
 	@Query(nativeQuery = true,value = "select car_registraion_number  from car where car_color= :color")
 	List<String> getAllRegistrationNumbersOfCarByColor(String color);
 
+	List<Car> findAllByColor(String color);
+
 }

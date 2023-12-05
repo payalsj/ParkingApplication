@@ -43,6 +43,12 @@ public class TicketController {
 		return ticketService.getTicketNumberByRegistrationNumber(registratonNumber);
 	}
 
+	//Ticket numbers of all tickets where a car of a particular color is placed
+	@GetMapping("/tickets/color/{color}")
+	public ResponseEntity<?> getTicketNumbersByCarColor(@PathVariable("color") String color) {
+
+		return ticketService.getTicketNumbersByCarColor(color);
+	}
 
 
 }
