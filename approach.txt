@@ -1,0 +1,66 @@
+About Project:
+
+The Parking Application is designed to facilitate efficient parking space utilization, entry/exit tracking, and overall management of a parking facility. 
+It will generate a ticket based on that ticket you will be assigned a spot to park your car.
+
+Approach:
+
+To Design the parking application I have followed following steps:
+
+Firstly I have designed data base and entities which are required,
+1.
+a) Car is an entity which have fields like carId, registration number, color
+b) Parking Spot this entity contains fields like id, spot id, car .
+I have added some predefined spots starting from 1 to 10 for this I am considering parking in one row only so the nearest parking spot from entry point will be 1
+then 2 and so on...We can extend this to two side parking , mulitilevel parking etc.
+
+To create parking_spot table: 
+create table parking_spot(SPOT_ID int PRIMARY key auto_increment, SPOT_NUMBER int, CAR_ID int);
+
+To Insert values into it:
+insert into parking_spot (SPOT_NUMBER, CAR_ID)values (1,null),(2, null),(3,null),(4,null),(5,null),(6,null);
+
+As shown in above insert query in parking_spot table intially I have set all the car values as null.
+
+When user wanted to park the car to get the nearest parking_spot I have used the following query which sort all the available places and as it has limit 1 so it will return the nearest place.
+
+"select * from parking_spot where CAR_ID is null order by SPOT_NUMBER limit 1;" 
+
+c)Ticket entity contains ticketId, ticketNumber and spotId so we can assign the ticket to the user based on the nearest empty spot, to generate ticket I have used random function to generate random number.
+d) AuditCars is the entity which has car registration number, entry time and exit time(to extend this application in future we can use this table for bill payment based on time)
+
+
+End Points :
+
+TicketController: This controller has following end points
+
+1. "http://localhost:8080/tickets" : 
+This api will first search the available parking spots if there is no spot available then it will throw ParkingNotAvailable Exception
+else it will create an object of car and store it into database if the car already exists then it will throw an CarAlreadyEnteredException exception 
+else it will save the car , spot details and ticket details into database. This api also stores audit of car like registartion number , entry time
+
+2."http://localhost:8080/unpark/{registrationNumber}" :
+To unpark the I have set spotId as null in Ticket table , and aslo removed car from car table so that if next time new car comes for the parking 
+we can assign the same spot to that car 
+
+Task 1: Registration numbers of all cars of a particular Color
+To achieve above task , I have craeted an end point in CarController  "http://localhost:8080/cars/{color}"
+this api will take color based on the color we will registration numbers of all cars who has this color
+to get it I have used the following query :
+@Query(nativeQuery = true,value = "select car_registraion_number  from car where car_color= :color")
+	List<String> getAllRegistrationNumbersOfCarByColor(String color);
+
+Task 2 : Api which will return Ticket number in which a car with a given registration number is placed
+end point: "http://localhost:8080/tickets/{registratonNumber}"
+To achieve above task , firstly I have checked the car is present in car table or not if not then throw CarNotFound exception.
+If it is present using carId I have found parking spot id and using it from ticket table I found ticket number and i have returned this ticket number.
+
+Task 3.  Ticket numbers of all tickets where a car of a particular color is placed
+end Point: "http://localhost:8080/tickets/color/{color}
+to achieve this task firstly I have checked used the following method:
+List<Car> findAllByColor(String color); 
+It will return list of all cars with particular color if no car found then throw CarNotFound exception
+ Now I have used a for loop on this list and for each car using carId i got spotId using spotId I got the ticket 
+from ticket I got the ticket number which I have added into list of tickets and I have returned that list
+
+
