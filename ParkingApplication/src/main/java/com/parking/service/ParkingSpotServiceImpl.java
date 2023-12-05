@@ -12,6 +12,8 @@ import com.parking.repository.CarRepository;
 import com.parking.repository.ParkingSpotRepository;
 import com.parking.repository.TicketRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ParkingSpotServiceImpl implements ParkingSpotService {
 
@@ -49,4 +51,19 @@ public class ParkingSpotServiceImpl implements ParkingSpotService {
 
 	}
 
+	@Transactional
+	public void deleteByRegistrationNumber(String registrationNumber) {
+		Car car = carRepository.findByRegistrationNumber(registrationNumber);
+		if (car == null) {
+			throw null;
+		} else {
+			ParkingSpot parkingSpot = parkingSpotRepository.findByCarId(car.getId());
+			parkingSpot.setCar(null);
+			parkingSpotRepository.save(parkingSpot);
+			Ticket ticket=ticketRepository.findByParkingSpot(parkingSpot);
+			ticket.setParkingSpot(null);
+			carRepository.delete(car);
+
+		}
+	}
 }

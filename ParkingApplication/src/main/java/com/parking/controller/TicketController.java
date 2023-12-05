@@ -1,7 +1,8 @@
 package com.parking.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,21 +12,21 @@ import com.parking.entity.Ticket;
 import com.parking.service.ParkingSpotServiceImpl;
 
 @RestController
-public class ParkingController {
+public class TicketController {
 
 	@Autowired
 	private ParkingSpotServiceImpl parkingSpotServic;
 
-	@PostMapping("/park/car")
+	@PostMapping("/tickets")
 	public Ticket getTicket(@RequestBody CarDto car) {
 		return parkingSpotServic.getTicket(car);
 
 	}
 
-	@GetMapping("/ticket")
-	public Ticket getTicket() {
-		return parkingSpotServic.generateTicket();
+	@DeleteMapping("/unpark/{registrationNumber}")
+	public void unparkCar(@PathVariable("registrationNumber") String registrationNumber) {
 
+		parkingSpotServic.deleteByRegistrationNumber(registrationNumber);
 	}
 
 }

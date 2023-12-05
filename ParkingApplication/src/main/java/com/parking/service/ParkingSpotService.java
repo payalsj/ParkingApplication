@@ -8,6 +8,7 @@ public interface ParkingSpotService {
 	public Ticket generateTicket();
 	
 	public Ticket getTicket(CarDto car);
+	public void deleteByRegistrationNumber(String registrationNumber);
 
 
 }

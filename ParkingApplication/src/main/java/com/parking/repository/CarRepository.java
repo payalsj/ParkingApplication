@@ -8,4 +8,8 @@ import com.parking.entity.Car;
 @Repository
 public interface CarRepository extends JpaRepository<Car, Integer> {
 
+	void deleteByRegistrationNumber(String registrationNumber);
+
+	Car findByRegistrationNumber(String registrationNumber);
+
 }
